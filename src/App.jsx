@@ -1,20 +1,37 @@
 import { useState } from "react";
 import "./App.css";
+import { firestore } from "../config/firebase";
 
 function App() {
   const [remember, setRemember] = useState(false);
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [loginErro, setLoginErro] = useState(false);
 
-  function submitLogin() {
+  async function submitLogin(e) {
+    e.preventDefault();
+    if (login === "" || password === "") {
+      setLoginErro(true);
+      return;
+    }
     const dados = {
       login: login,
-      password: password,
       remember: remember,
     };
     console.table(dados);
-    if (login !== "" || password !== "") {
+    try {
+      await firestore.collection("dados").add({
+        login: login,
+        remember: remember,
+      });
+
+      setRemember(false);
+      setPassword("");
+      setLogin("");
+      setLoginErro(false);
       alerta();
+    } catch (e) {
+      console.error("Error adding document: ", e);
     }
   }
 
@@ -23,7 +40,7 @@ function App() {
   }
 
   function alerta() {
-    alert("Você sofreu um fishing");
+    alert("Você quase sofreu um fishing ! - Tenha mais cuidado.");
   }
 
   return (
@@ -70,6 +87,22 @@ function App() {
 
                     <div className="row justify-content-center my-4">
                       <div className="col-12 col-md-12 col-lg-8">
+                        {loginErro && (
+                          <div className="loginerrors">
+                            <a
+                              href="#"
+                              id="loginerrormessage"
+                              className="accesshide"
+                            >
+                              Nome de usuário ou senha errados. Por favor tente
+                              outra vez.
+                            </a>
+                            <div className="alert alert-danger" role="alert">
+                              Nome de usuário ou senha errados. Por favor tente
+                              outra vez.
+                            </div>
+                          </div>
+                        )}
                         <div className="card loginpanel">
                           <div className="card-block">
                             <div className="row">
@@ -124,7 +157,7 @@ function App() {
                                 <p className="welcome">
                                   Você possui uma conta?
                                 </p>
-                                <form>
+                                <form onSubmit={(e) => submitLogin(e)}>
                                   <label htmlFor="username" className="sr-only">
                                     Identificação de usuário
                                   </label>
@@ -134,8 +167,8 @@ function App() {
                                     </span>
                                     <input
                                       type="text"
-                                      name="username"
                                       id="username"
+                                      value={login}
                                       className="form-control"
                                       placeholder="Identificação de usuário"
                                       onChange={(e) => setLogin(e.target.value)}
@@ -151,10 +184,10 @@ function App() {
                                     </span>
                                     <input
                                       type="password"
-                                      name="password"
                                       id="password"
                                       className="form-control"
                                       placeholder="Senha"
+                                      value={password}
                                       onChange={(e) =>
                                         setPassword(e.target.value)
                                       }
@@ -176,7 +209,6 @@ function App() {
                                     type="submit"
                                     className="btn btn-primary btn-block"
                                     id="loginbtn"
-                                    onClick={submitLogin}
                                   >
                                     Acessar
                                   </button>
