@@ -1,11 +1,16 @@
 import { useState } from "react";
 import "./App.css";
 import { firestore } from "../config/firebase";
+import { Link, useNavigate  } from "react-router-dom";
 function App() {
   const [remember, setRemember] = useState(false);
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [loginErro, setLoginErro] = useState(false);
+  let navigate = useNavigate();
+  function goToDashboard(){
+    navigate("/dashboard");
+  }
 
   async function submitLogin(e) {
     e.preventDefault();
@@ -106,7 +111,9 @@ function App() {
                           <div className="card-block">
                             <div className="row">
                               <div className="col-md-7 instructions">
-                                <h2>UNIFAMETRO 2022</h2>
+                                <h2>
+                                  UNIFAMETRO <span onClick={goToDashboard}>2022</span>
+                                </h2>
                                 <hr align="left" />
 
                                 <div className="m-t-1">
