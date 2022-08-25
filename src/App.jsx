@@ -133,11 +133,11 @@ function App() {
                                   <p dir="ltr"></p>
                                   <h3>Esta é a sua primeira vez aqui?</h3>
                                   <br />
-                                  <p dir="ltr">
+                                  <p  style={{textAlign: 'center'}} dir="ltr">
                                     Para acessar o ambiente utilize as mesmas
                                     credenciais do Portal Acadêmico.
                                   </p>
-                                  <p dir="ltr">
+                                  <p  style={{textAlign: 'center'}} dir="ltr">
                                     Caso não consiga efetuar seu login, envie
                                     e-mail para:{" "}
                                     <strong>suporte@unifametro.edu.br</strong>
@@ -199,7 +199,7 @@ function App() {
                                       checked={remember}
                                       onChange={handleChange}
                                     />
-                                    <label htmlFor="rememberusername">
+                                    <label style={{paddingLeft:'5px'}} htmlFor="rememberusername">
                                       Lembrar identificação de usuário
                                     </label>
                                   </div>
