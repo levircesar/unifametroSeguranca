@@ -1,10 +1,19 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Dashboard from "./Dashboard";
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Routes>
+        <Route  path="/" element={<App />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="*" element={<App />} />
+      </Routes>
+    </Router>
   </React.StrictMode>
-)
+);
