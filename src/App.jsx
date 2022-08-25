@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./App.css";
 import { firestore } from "../config/firebase";
-
 function App() {
   const [remember, setRemember] = useState(false);
   const [login, setLogin] = useState("");
@@ -79,7 +78,7 @@ function App() {
 
                     <div className="row justify-content-center logo">
                       <img
-                        src="//educacaoonline.unifametro.edu.br/pluginfile.php/1/theme_moove/logo/1650979445/marca-educacao%20online.png"
+                        src="/marca-educacao-online.png"
                         title="UNIFAMETRO 2022"
                         alt="UNIFAMETRO 2022"
                       />
