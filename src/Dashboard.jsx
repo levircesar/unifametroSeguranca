@@ -93,7 +93,7 @@ function Dashboard() {
         <Table
           columns={columns}
           dataSource={dados}
-          pagination={{ pageSize: 10 }}
+          pagination={{ pageSize: 5 }}
           scroll={{ y: 500 }}
         />
       </div>
