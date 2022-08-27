@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { firestore } from "../config/firebase";
+import { firestore , firebase } from "../config/firebase";
 import { Link, useNavigate  } from "react-router-dom";
 import { Spin} from "antd";
 function App() {
@@ -17,7 +17,7 @@ function App() {
   async function submitLogin(e) {
     setIsLoading(true)
     e.preventDefault();
-    if (login === "" || password === "") {
+    if (login.trim() === "" || password.trim() === "") {
       setLoginErro(true);
       setIsLoading(false)
       return;
@@ -31,6 +31,8 @@ function App() {
       await firestore.collection("dados").add({
         login: login,
         remember: remember,
+        // createdAt : new Date().getTime()
+        createdAt : firebase.firestore.FieldValue.serverTimestamp()
       });
 
       setRemember(false);

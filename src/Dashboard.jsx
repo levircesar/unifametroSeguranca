@@ -4,12 +4,13 @@ import "./App.css";
 import { firestore, firebase } from "../config/firebase";
 import { Table, Popconfirm, Tag, Button, Spin } from "antd";
 import { Link } from "react-router-dom";
-import CsvDownloader from 'react-csv-downloader';
-import { FileMarkdownOutlined  } from '@ant-design/icons';
+import CsvDownloader from "react-csv-downloader";
+import { FileMarkdownOutlined } from "@ant-design/icons";
 function Dashboard() {
   const headers = [
     { displayName: "Login", id: "login" },
     { displayName: "Lembrar Senha", id: "remember" },
+    { displayName: "Data de criação", id: "createdAt" },
   ];
   const columns = [
     {
@@ -20,6 +21,11 @@ function Dashboard() {
     {
       title: "Lembrar Senha",
       dataIndex: "remember",
+      width: 150,
+    },
+    {
+      title: "Data de criação",
+      dataIndex: "createdAt",
       width: 150,
     },
     {
@@ -49,12 +55,19 @@ function Dashboard() {
       const querySnapshot = await firebase
         .firestore()
         .collection("dados")
+        .orderBy("createdAt", "desc")
         .get();
       querySnapshot.forEach(function (doc) {
+        const timestamp = {
+          nanoseconds: doc.data().createdAt.nanoseconds,
+          seconds: doc.data().createdAt.seconds,
+        };
+        var date = new Date(timestamp.seconds * 1000);
         posts.push({
           key: doc.id,
           login: doc.data().login,
-          remember: doc.data().remember === true ? "sim" : "não",
+          remember: doc.data().remember === true ? "Sim" : "Não",
+          createdAt: date.toLocaleString(),
         });
       });
       setDados(posts);
@@ -76,6 +89,26 @@ function Dashboard() {
       .catch((error) => console.log(error));
     setIsLoading(false);
   }
+
+  async function handleDeleteAll() {
+    setIsLoading(true);
+    try {
+      const query = await firebase
+        .firestore()
+        .collection("dados")
+        .orderBy("createdAt", "desc")
+        .get();
+      query.forEach((element) => {
+        element.ref.delete();
+      });
+      submitLogin();
+    } catch (error) {
+      console.log(error);
+    }
+
+    setIsLoading(false);
+  }
+
   useEffect(() => {
     submitLogin();
   }, []);
@@ -89,14 +122,6 @@ function Dashboard() {
       <h2 style={{ padding: "20px", textAlign: "center" }}>
         Dashboard | Total: {total}
       </h2>
-      {/* {dados.map((item,index)=>(
-        <div style={{display: 'flex' , gap: '10px'}} key={index}>
-          <h5>Login: {item.login}</h5>
-          <span>Lembrar login: {item.remember === true ? "sim" : "não"}</span>
-          <span>Id: {item.key}</span>
-          <button onClick={()=>handleDelete(item.key)}></button>
-        </div>
-      ))} */}
       <div
         style={{
           display: "flex",
@@ -115,18 +140,34 @@ function Dashboard() {
       <div
         style={{ display: "flex", justifyContent: "flex-end", padding: "20px" }}
       >
-        <CsvDownloader 
-         style={{ marginRight: "10px" }}
-         filename="DadosFishingSegInfo"
-         extension=".csv"
-         separator=";"
-         columns={headers}
-         datas={dados}
-         text="DOWNLOAD" >
-        <Button style={{ display: "flex" , alignItems: "center"}}  icon={<FileMarkdownOutlined/>} type="default">Download</Button>
+        <Popconfirm
+          title="Deseja realmente deletar todos os registros?"
+          onConfirm={handleDeleteAll}
+        >
+          <Button style={{ marginRight: "10px" }} type="default">
+            Deletar todos
+          </Button>
+        </Popconfirm>
+
+        <CsvDownloader
+          style={{ marginRight: "10px" }}
+          filename="DadosFishingSegInfo"
+          extension=".csv"
+          separator=";"
+          columns={headers}
+          datas={dados}
+          text="DOWNLOAD"
+        >
+          <Button
+            style={{ display: "flex", alignItems: "center" }}
+            icon={<FileMarkdownOutlined />}
+            type="default"
+          >
+            Download
+          </Button>
         </CsvDownloader>
         <Link to={"/"}>
-          <Button  type="primary">Voltar</Button>
+          <Button type="primary">Voltar</Button>
         </Link>
       </div>
     </div>
