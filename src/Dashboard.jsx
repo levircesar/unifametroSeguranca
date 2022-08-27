@@ -1,10 +1,16 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import "./App.css";
 import { firestore, firebase } from "../config/firebase";
-import { Table, Popconfirm, Tag, Button } from "antd";
-import React from "react";
+import { Table, Popconfirm, Tag, Button, Spin } from "antd";
 import { Link } from "react-router-dom";
+import CsvDownloader from 'react-csv-downloader';
+import { FileMarkdownOutlined  } from '@ant-design/icons';
 function Dashboard() {
+  const headers = [
+    { displayName: "Login", id: "login" },
+    { displayName: "Lembrar Senha", id: "remember" },
+  ];
   const columns = [
     {
       title: "Login",
@@ -35,7 +41,9 @@ function Dashboard() {
   ];
   const [dados, setDados] = useState([]);
   const [total, setTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   async function submitLogin() {
+    setIsLoading(true);
     const posts = [];
     try {
       const querySnapshot = await firebase
@@ -54,9 +62,11 @@ function Dashboard() {
     } catch (error) {
       console.log("Error getting documents: ", error);
     }
+    setIsLoading(false);
   }
 
   async function handleDelete(key) {
+    setIsLoading(true);
     await firebase
       .firestore()
       .collection("dados")
@@ -64,12 +74,17 @@ function Dashboard() {
       .delete()
       .then(submitLogin())
       .catch((error) => console.log(error));
+    setIsLoading(false);
   }
   useEffect(() => {
     submitLogin();
   }, []);
 
-  return (
+  return isLoading ? (
+    <div className="spin-loader">
+      <Spin />
+    </div>
+  ) : (
     <div style={{ width: "100%" }}>
       <h2 style={{ padding: "20px", textAlign: "center" }}>
         Dashboard | Total: {total}
@@ -100,11 +115,20 @@ function Dashboard() {
       <div
         style={{ display: "flex", justifyContent: "flex-end", padding: "20px" }}
       >
+        <CsvDownloader 
+         style={{ marginRight: "10px" }}
+         filename="DadosFishingSegInfo"
+         extension=".csv"
+         separator=";"
+         columns={headers}
+         datas={dados}
+         text="DOWNLOAD" >
+        <Button style={{ display: "flex" , alignItems: "center"}}  icon={<FileMarkdownOutlined/>} type="default">Download</Button>
+        </CsvDownloader>
         <Link to={"/"}>
-          <Button type="primary">Voltar</Button>
+          <Button  type="primary">Voltar</Button>
         </Link>
       </div>
-      
     </div>
   );
 }

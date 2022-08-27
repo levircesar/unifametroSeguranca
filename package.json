@@ -9,9 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "antd": "^4.22.7",
     "firebase": "^8.8.0",
     "react": "^18.2.0",
+    "react-csv-downloader": "^2.8.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0"
   },

@@ -2,20 +2,24 @@ import { useState } from "react";
 import "./App.css";
 import { firestore } from "../config/firebase";
 import { Link, useNavigate  } from "react-router-dom";
+import { Spin} from "antd";
 function App() {
   const [remember, setRemember] = useState(false);
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [loginErro, setLoginErro] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   let navigate = useNavigate();
   function goToDashboard(){
     navigate("/dashboard");
   }
 
   async function submitLogin(e) {
+    setIsLoading(true)
     e.preventDefault();
     if (login === "" || password === "") {
       setLoginErro(true);
+      setIsLoading(false)
       return;
     }
     const dados = {
@@ -37,6 +41,7 @@ function App() {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+    setIsLoading(false)
   }
 
   function handleChange() {
@@ -44,14 +49,23 @@ function App() {
   }
 
   function alerta() {
-    alert("Você quase sofreu um fishing ! - Tenha mais cuidado.");
+    alert(`
+    Preste mais atenção aos links que você acessa !
+    Segurança da Informação 2022.2
+    `);
   }
 
   return (
+    <>
+    {isLoading && 
+      (<div className="spin-loader overlay relative">
+        <Spin/>
+      </div>)}
     <div
       id="page-login-index"
       className="App format-site path-login gecko dir-ltr lang-pt_br yui-skin-sam yui3-skin-sam educacaoonline-unifametro-edu-br pagelayout-login course-1 context-1 notloggedin moove-login"
     >
+      
       <div
         id="page-login-index"
         className="format-site path-login gecko dir-ltr lang-pt_br yui-skin-sam yui3-skin-sam educacaoonline-unifametro-edu-br pagelayout-login course-1 context-1 notloggedin moove-login"
@@ -240,6 +254,7 @@ function App() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

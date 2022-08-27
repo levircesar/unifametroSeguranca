@@ -1,3 +1,19 @@
 body{
   margin: 0;
 }
+
+.spin-loader{
+  width: 100% ;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.overlay{
+  background-color: rgba(0,0,0,0.5);
+}
+.relative{
+  position: absolute;
+  z-index:  999;
+}
