@@ -26,7 +26,7 @@ function App() {
       login: login,
       remember: remember,
     };
-    console.table(dados);
+    // console.table(dados);
     try {
       await firestore.collection("dados").add({
         login: login,
