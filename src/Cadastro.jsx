@@ -1,59 +1,21 @@
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import "./App.css";
 import { firestore, firebase } from "../config/firebase";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Checkbox, Col, Form, Input, Popconfirm, Row, Select, Spin } from "antd";
+import { Button, Checkbox, Col, Form, Input, message, Popconfirm, Row, Select, Spin } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 
 function Cadastro() {
   const [isLoading, setIsLoading] = useState(false);
-
-  const docs = ["cantadas", "piadas", "whatsapp"];
-
+  const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
+  const [collectionList, setCollectionList] = useState([]);
   let navigate = useNavigate();
   function goToDashboard() {
     navigate("/dashboard");
   }
 
-  // async function submitLogin(e) {
-  //   setIsLoading(true);
-  //   e.preventDefault();
-  //   if (login.trim() === "" || password.trim() === "") {
-  //     setLoginErro(true);
-  //     setIsLoading(false);
-  //     return;
-  //   }
-  //   const form = {
-  //     text: "Vem de zap linda",
-  //     status: false,
-  //   };
-  //   // console.table(dados);
-  //   try {
-  //     async function saveInDatabase(item) {
-  //       await firestore.collection("oqueeumando").doc(item.type).add({
-  //         status: item.status,
-  //         text: item.text,
-  //         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-  //       });
-  //     }
-  //     await firestore.collection("oqueeumando").doc("whatsapp").add({
-  //       status: false,
-  //       type: 0,
-  //       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-  //     });
-
-  //     setRemember(false);
-  //     setPassword("");
-  //     setLogin("");
-  //     setLoginErro(false);
-  //     alerta();
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  //   setIsLoading(false);
-  // }
-
-
+  
   const { Option } = Select;
 
   const layout = {
@@ -65,23 +27,18 @@ function Cadastro() {
     wrapperCol: { offset: 8, span: 16 },
   };
 
-  const [form] = Form.useForm();
-
-  const onGenderChange = (value) => {
-    switch (value) {
-      case "male":
-        form.setFieldsValue({ note: "Hi, man!" });
-        break;
-      case "female":
-        form.setFieldsValue({ note: "Hi, lady!" });
-        break;
-      case "other":
-        form.setFieldsValue({ note: "Hi there!" });
-        break;
-      default:
-    }
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Ação concluída com sucesso!',
+    });
   };
-
+  const error = () => {
+    messageApi.open({
+      type: 'error',
+      content: 'Ocorreu um erro !',
+    });
+  };
   const onFinish = async (values) => {
     setIsLoading(true);
     try {
@@ -91,9 +48,11 @@ function Cadastro() {
         text: values.textArea,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
+      success()
       form.resetFields();
-    } catch (error) {
-      console.error("Error adding document: ", error);
+    } catch (e) {
+      error()
+      console.error("Error adding document: ", e);
     }
     console.log(values);
     console.log(values.type);
@@ -105,8 +64,34 @@ function Cadastro() {
     form.resetFields();
   };
 
+  async function getCollectionList() {
+    setIsLoading(true)
+    const posts = [];
+    try {
+      const querySnapshot = await firebase
+        .firestore()
+        .collection("oqueeumando")
+        .get();
+
+      querySnapshot.forEach(function (doc) {
+        posts.push(doc.id)
+        console.log(doc.id, '=>', doc.data())
+       } );
+      setCollectionList(posts);
+      console.log(posts);
+    } catch (error) {
+      console.log("Error getting documents: ", error);
+    }
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    // submitLogin();
+    getCollectionList();
+  }, []);
   return (
     <>
+      {contextHolder}
       {isLoading && (
         <div className="spin-loader overlay relative">
           <Spin />
@@ -132,8 +117,9 @@ function Cadastro() {
             // onChange={onGenderChange}
             allowClear
           >
-            <Option value="cantadas">cantadas</Option>
-            <Option value="piadas">piadas</Option>
+            {collectionList.map(item => (
+            <Option key={item} value={item}>{item}</Option>
+            ))}
             {/* <Option value="other">other</Option> */}
           </Select>
         </Form.Item>
@@ -171,6 +157,9 @@ function Cadastro() {
           </Popconfirm>
         </Form.Item>
       </Form>
+      <Link to={"/"} style={{ marginRight: "10px" }}>
+          <Button type="primary">Voltar</Button>
+      </Link>
     </>
   );
 }
