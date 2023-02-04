@@ -1,0 +1,36 @@
+/* eslint-disable prettier/prettier */
+export const Piadas = [
+  
+{area:'',frase:'Batman pegou seu bat-sapato social e seu bat-blazer. Aonde ele foi?A um Bat-zado'},
+{area:'',frase:'2 litros de leite atravessaram a rua e foram atropelados. Um morreu, o outro não, por quê? Por que um deles era Longa Vida '},
+{area:'',frase:'Porque o elefante não pega fogo? Porque ele já é cinza '},
+{area:'',frase:'Se o cachorro tivesse religiao, qual seria? Cao-domblé '},
+{area:'',frase:'Por que a Coca-Cola e a Fanta se dão muito bem? Porque se a Fanta quebra, a Coca-Cola! '},
+{area:'',frase:' Por que as plantinhas não falam? Porque elas são mudas.'},
+{area:'',frase:' Por que o Batman colocou o batmóvel no seguro? Porque ele tem medo que robin. '},
+{area:'',frase:'O que o advogado do frango foi fazer na delegacia? Foi soltar a franga.  '},
+{area:'',frase:'Para que serve óculos verde? Para verde perto.. '},
+{area:'',frase:'Para que serve óculos vermelho? Para vermelhor... '},
+{area:'',frase:'Você conhece a piada do pônei? Pô nei eu '},
+{area:'',frase:'O que o pagodeiro foi fazer na igreja? Cantar pá God'},
+{area:'',frase:'O que o pato falou para a pata? Vem quá'},
+{area:'',frase:'Você sabe qual é o rei dos queijos? O reiqueijão'},
+{area:'',frase:'O que o tomate foi fazer no banco? Tirar extrato'},
+{area:'',frase:'Como se chama a pessoa que viu o Thor de perto? Vi-Thor'},
+{area:'',frase:'Por que a velhinha não usa relógio? Porque ela é sem hora (senhora)'},
+{area:'',frase:'Por que há uma cama elástica no polo Norte? Para o urso polar'},
+{area:'',frase:'O que a vaca disse para o boi? Te amuuuuuuuuuuuu'},
+{area:'',frase:'A plantinha foi ao hospital, mas não foi atendida. Por que? Porque lá só tinha médico de plantão'},
+{area:'',frase:'Você conhece o site do cavalinho? O www ponto cavalinho ponto com ponto com ponto'},
+{area:'',frase:'O que o sal falou para a batata frita? É nois na frita (é nois na fita)'},
+{area:'',frase:'Antes da chuva eu lutava capoeira Agora depois da chuva eu luto combarro!'},
+{area:'',frase:'Qual o cereal favorito do vampiro? Aveia'},
+{area:'',frase:'Sabe o que o rato diz quando se queima? Nossa mickey mei! (Nossa me queimei)'},
+{area:'',frase:'Qual é o ator que está achando esse ano ruim? Keanu Reeves'},
+{area:'',frase:'Qual foi a primeira vez que os americanos comeram carne? Quando chegou Cristovão COM LOMBO'},
+{area:'',frase:'Ei, sabe qual país que não aceita táxi? Uberlândia'},
+{area:'',frase:'Qual é o aracnídeo que mais roda?  O escorPIÃO'},
+{area:'',frase:'Sabe a banda que te avisa quando tá passando vergonha? Paramore'},
+
+
+]

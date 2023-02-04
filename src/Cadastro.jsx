@@ -4,6 +4,7 @@ import { firestore, firebase } from "../config/firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Col, Form, Input, message, Popconfirm, Row, Select, Spin } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import {Piadas} from './utils/Piadas'
 
 function Cadastro() {
   const [isLoading, setIsLoading] = useState(false);
@@ -54,8 +55,8 @@ function Cadastro() {
       error()
       console.error("Error adding document: ", e);
     }
-    console.log(values);
-    console.log(values.type);
+    // console.log(values);
+    // console.log(values.type);
     setIsLoading(false);
     
   };
@@ -75,19 +76,42 @@ function Cadastro() {
 
       querySnapshot.forEach(function (doc) {
         posts.push(doc.id)
-        console.log(doc.id, '=>', doc.data())
+        // console.log(doc.id, '=>', doc.data())
        } );
       setCollectionList(posts);
-      console.log(posts);
+      // console.log(posts);
     } catch (error) {
       console.log("Error getting documents: ", error);
     }
     setIsLoading(false);
   }
 
+  async function cadastrarTudo() {
+    setIsLoading(true);
+    try {
+      for (var i = 0; i < Piadas.length;) {
+       
+      
+        await firestore.collection("oqueeumando")
+          .doc("piadas").collection("dados").add({
+          status: true,
+          text: Piadas[i].frase,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }).then(i++);
+      }
+      success()
+      form.resetFields();
+    } catch (e) {
+      error()
+      console.error("Error adding document: ", e);
+    }
+    setIsLoading(false);
+  }
   useEffect(() => {
     // submitLogin();
     getCollectionList();
+    // console.log(Assuntos)
+    // cadastrarTudo()
   }, []);
   return (
     <>

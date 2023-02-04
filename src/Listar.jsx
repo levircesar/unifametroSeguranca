@@ -29,22 +29,22 @@ function Listar() {
       dataIndex: "createdAt",
       width: 100,
     },
-    // {
-    //   title: "Alterar",
-    //   dataIndex: "change",
-    //   width: 150,
-    //   render: (_, record) =>
-    //     dados.length >= 1 ? (
-    //       <Tag color={"geekblue"} key={record.key}>
-    //         <Popconfirm
-    //           title="Deseja realmente alterar?"
-    //           onConfirm={() => handleChange(record.key)}
-    //         >
-    //           <a>Alterar</a>
-    //         </Popconfirm>
-    //       </Tag>
-    //     ) : null,
-    // },
+    {
+      title: "Alterar",
+      dataIndex: "change",
+      width: 150,
+      render: (_, record) =>
+        dados.length >= 1 ? (
+          <Tag color={"geekblue"} key={record.key}>
+            <Popconfirm
+              title="Deseja realmente alterar?"
+              onConfirm={() => handleChange(record.key, record.status)}
+            >
+              <a>Alterar</a>
+            </Popconfirm>
+          </Tag>
+        ) : null,
+    },
     {
       title: "Deletar",
       dataIndex: "delete",
@@ -74,7 +74,7 @@ function Listar() {
       const querySnapshot = await firebase
         .firestore()
         .collection("oqueeumando")
-        .doc("piadas")
+        .doc(collection)
         .collection("dados")
         .orderBy("createdAt", "desc")
         .get();
@@ -94,24 +94,30 @@ function Listar() {
       });
       setDados(posts);
       setTotal(posts.length);
-      console.log(posts);
+      // console.log(posts);
+      
     } catch (error) {
       console.log("Error getting documents: ", error);
     }
     setIsLoading(false);
+    
   }
 
   async function handleDelete(key) {
     setIsLoading(true);
-    await firebase
+    try {
+      await firebase
       .firestore()
       .collection("oqueeumando")
       .doc(collection)
       .collection("dados")
       .doc(key)
       .delete()
-      .then(submitLogin())
-      .catch((error) => console.log(error));
+      submitLogin()
+    } catch (e) {
+      console.log(e)
+    }
+    
     setIsLoading(false);
   }
 
@@ -126,24 +132,30 @@ function Listar() {
 
       querySnapshot.forEach(function (doc) {
         posts.push(doc.id)
-        console.log(doc.id, '=>', doc.data())
+        // console.log(doc.id, '=>', doc.data())
        } );
       setCollectionList(posts);
-      console.log(posts);
+      // console.log(posts);
     } catch (error) {
       console.log("Error getting documents: ", error);
     }
     setIsLoading(false);
   }
-  async function handleChange(key) {
+  async function handleChange(key,status) {
     setIsLoading(true);
-    await firebase
+    try {
+      await firebase
       .firestore()
       .collection("oqueeumando")
+      .doc(collection)
+      .collection("dados")
       .doc(key)
-      .update()
-      .then(submitLogin())
-      .catch((error) => console.log(error));
+      .update({status : status === 'Sim'? false: true })
+      submitLogin()
+    } catch (e) {
+      console.log(e)
+    }
+
     setIsLoading(false);
   }
 
@@ -175,7 +187,7 @@ function Listar() {
       });
       setDados(posts);
       setTotal(posts.length);
-      console.log(posts);
+      // console.log(posts);
     } catch (error) {
       console.log("Error getting documents: ", error);
     }
